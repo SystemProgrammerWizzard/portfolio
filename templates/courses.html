@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="page-header">
+    <div class="page-header-content">
+        <h1 class="page-title">{{ section.title }}</h1>
+        {% if section.description %}
+        <p class="page-description">{{ section.description }}</p>
+        {% endif %}
+    </div>
+</section>
+
+<section class="page-content">
+    {% if section.content %}
+    <div class="content-text">
+        {{ section.content | safe }}
+    </div>
+    {% endif %}
+</section>
+
+<h2>Learning Tracks</h2>
+<p>
+Whether you’re brand new or already have some experience, there’s always room to grow.  
+If you’re just starting out, begin with the Beginner Track and move forward at your own pace —  
+over time, you can explore the Intermediate and Advanced Tracks as your skills develop.
+</p>
+<!-- Learning Tracks Section -->
+<section class="learning-tracks">
+    
+    <div class="tracks-container">
+        <!-- Beginner Track -->
+        <div class="track-section">
+            <div class="track-header">
+                <span class="track-icon">🚀</span>
+                <h2 class="track-title">Beginner Track</h2>
+                <p class="track-subtitle">New to system programming</p>
+            </div>
+            <div class="track-content">
+                <div class="course-item">
+                    <h4>Introduction to C Programming</h4>
+                    <p>Variables, functions, control structures</p>
+                </div>
+                <div class="course-item">
+                    <h4>Linux Fundamentals</h4>
+                    <p>Command line, file system, basic tools</p>
+                </div>
+                <div class="course-item">
+                    <h4>Basic Memory Management</h4>
+                    <p>Stack vs heap, pointers, basic allocation</p>
+                </div>
+                <div class="course-item">
+                    <h4>File I/O and System Calls</h4>
+                    <p>Reading/writing files, error handling</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Intermediate Track -->
+        <div class="track-section">
+            <div class="track-header">
+                <span class="track-icon">⚡</span>
+                <h2 class="track-title">Intermediate Track</h2>
+                <p class="track-subtitle">Build on your foundation</p>
+            </div>
+            <div class="track-content">
+                <div class="course-item">
+                    <h4>Advanced C/C++ Techniques</h4>
+                    <p>Memory management, data structures</p>
+                </div>
+                <div class="course-item">
+                    <h4>Process and Thread Management</h4>
+                    <p>Concurrency, synchronization, IPC</p>
+                </div>
+                <div class="course-item">
+                    <h4>Network Programming</h4>
+                    <p>Sockets, protocols, client-server</p>
+                </div>
+                <div class="course-item">
+                    <h4>Performance Optimization</h4>
+                    <p>Profiling, optimization techniques</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Advanced Track -->
+        <div class="track-section">
+            <div class="track-header">
+                <span class="track-icon">🔥</span>
+                <h2 class="track-title">Advanced Track</h2>
+                <p class="track-subtitle">Master complex topics</p>
+            </div>
+            <div class="track-content">
+                <div class="course-item">
+                    <h4>Kernel Development</h4>
+                    <p>Module development, kernel APIs</p>
+                </div>
+                <div class="course-item">
+                    <h4>Device Drivers</h4>
+                    <p>Hardware interfaces, driver architecture</p>
+                </div>
+                <div class="course-item">
+                    <h4>Embedded Systems</h4>
+                    <p>Real-time systems, microcontrollers</p>
+                </div>
+                <div class="course-item">
+                    <h4>System Architecture</h4>
+                    <p>Large-scale design, distributed systems</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Course Sections -->
+{% if section.subsections %}
+<section class="courses-list">
+    <h2 class="section-title">Browse by Language & Technology</h2>
+    <div class="courses-grid">
+        {% for subsection_path in section.subsections %}
+        {% set subsection = get_section(path=subsection_path) %}
+        <div class="course-card">
+            <div class="course-icon">
+                {% if "C++" in subsection.title %}💻
+                {% elif "C" in subsection.title %}🔧
+                {% elif "Rust" in subsection.title %}🦀
+                {% elif "Python" in subsection.title %}🐍
+                {% elif "Linux" in subsection.title %}🐧
+                {% elif "OS" in subsection.title %}⚙️
+                {% elif "Yocto" in subsection.title %}🔨
+                {% else %}📚
+                {% endif %}
+            </div>
+            <h3 class="course-title">
+                <a href="{{ subsection.permalink }}">{{ subsection.title }}</a>
+            </h3>
+            {% if subsection.description %}
+            <p class="course-description">{{ subsection.description }}</p>
+            {% endif %}
+            <a href="{{ subsection.permalink }}" class="course-link">Start Learning →</a>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+<!-- Page Navigation -->
+{% if section.pages %}
+<section class="additional-content">
+    <h2 class="section-title">Additional Resources</h2>
+    <div class="posts-grid">
+        {% for page in section.pages %}
+        <article class="post-card">
+            <div class="post-meta">
+                <time class="post-date">{{ page.date | date(format="%B %d, %Y") }}</time>
+            </div>
+            <h3 class="post-title">
+                <a href="{{ page.permalink }}">{{ page.title }}</a>
+            </h3>
+            {% if page.description %}
+            <p class="post-excerpt">{{ page.description }}</p>
+            {% elif page.summary %}
+            <p class="post-excerpt">{{ page.summary | safe }}</p>
+            {% endif %}
+            <a href="{{ page.permalink }}" class="post-link">Read More →</a>
+        </article>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+{% endblock content %}

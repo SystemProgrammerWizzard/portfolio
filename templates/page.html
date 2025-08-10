@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block content %}
+<article class="post">
+    <header class="post-header">
+        <div class="post-meta">
+            <time class="post-date">{{ page.date | date(format="%B %d, %Y") }}</time>
+            {% if page.reading_time %}
+            <span class="post-reading-time">{{ page.reading_time }} min read</span>
+            {% endif %}
+            {% if page.taxonomies.tags %}
+            <div class="post-tags">
+                {% for tag in page.taxonomies.tags %}
+                <a href="/tags/{{ tag | slugify }}" class="tag">#{{ tag }}</a>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        <h1 class="post-title">{{ page.title }}</h1>
+        {% if page.description %}
+        <p class="post-description">{{ page.description }}</p>
+        {% endif %}
+    </header>
+
+    <div class="post-content">
+        {{ page.content | safe }}
+    </div>
+
+    {% if page.extra.author or page.updated %}
+    <footer class="post-footer">
+        {% if page.extra.author %}
+        <div class="post-author">
+            <span>By {{ page.extra.author }}</span>
+        </div>
+        {% endif %}
+        {% if page.updated %}
+        <div class="post-updated">
+            <span>Updated: {{ page.updated | date(format="%B %d, %Y") }}</span>
+        </div>
+        {% endif %}
+    </footer>
+    {% endif %}
+</article>
+
+<!-- Navigation between posts -->
+{% if config.extra.enable_post_view_navigation %}
+<nav class="post-navigation">
+    <div class="post-nav-content">
+        {% if page.earlier %}
+        <div class="post-nav-item post-nav-prev">
+            <span class="post-nav-label">Previous Post</span>
+            <a href="{{ page.earlier.permalink }}" class="post-nav-link">
+                {{ page.earlier.title }}
+            </a>
+        </div>
+        {% endif %}
+
+        {% if page.later %}
+        <div class="post-nav-item post-nav-next">
+            <span class="post-nav-label">Next Post</span>
+            <a href="{{ page.later.permalink }}" class="post-nav-link">
+                {{ page.later.title }}
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</nav>
+{% endif %}
+
+<!-- Back to section link -->
+<div class="back-to-section">
+    {% set parent_section = page.ancestors | last %}
+    {% if parent_section %}
+    {% set parent_section_data = get_section(path=parent_section) %}
+    <a href="{{ parent_section_data.permalink }}" class="back-link">
+        ← Back to {{ parent_section_data.title }}
+    </a>
+    {% endif %}
+</div>
+{% endblock content %}

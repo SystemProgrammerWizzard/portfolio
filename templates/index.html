@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-terminal">
+        <div class="terminal-header">
+            <span class="terminal-dot red"></span>
+            <span class="terminal-dot yellow"></span>
+            <span class="terminal-dot green"></span>
+            <span class="terminal-title">system-programming.sh</span>
+        </div>
+        <div class="terminal-body">
+            <div class="terminal-line">
+                <span class="prompt">$</span>
+                <span class="command">whoami</span>
+            </div>
+            <div class="terminal-output">System Programming Hub</div>
+            <div class="terminal-line">
+                <span class="prompt">$</span>
+                <span class="command">ls -la skills/</span>
+            </div>
+            <div class="terminal-output">
+                drwxr-xr-x C Programming<br>
+                drwxr-xr-x C++ Development<br>
+                drwxr-xr-x Linux Systems<br>
+                drwxr-xr-x Operating Systems<br>
+                drwxr-xr-x Python Scripting<br>
+                drwxr-xr-x Rust Programming<br>
+                drwxr-xr-x Yocto Project
+            </div>
+            <div class="terminal-line">
+                <span class="prompt">$</span>
+                <span class="command typing-animation">explore_knowledge_base</span>
+                <span class="cursor">_</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="hero-content">
+        <h1 class="hero-title">{{ section.title | default(value="System Programming Hub") }}</h1>
+        <p class="hero-description">
+            {{ section.description | default(value="Your comprehensive resource for system programming, low-level
+            development, and computer science fundamentals.") }}
+        </p>
+        <div class="hero-actions">
+            <a href="/courses" class="btn btn-primary">Start Learning</a>
+            <a href="/blog" class="btn btn-secondary">Read Blog</a>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="features">
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon">📝</div>
+            <h3 class="feature-title">Blog</h3>
+            <p class="feature-description">
+                A place where I share my journey in tech — thoughts, experiences, and reflections on what I’ve learned 
+                along the way. Less about fixing problems, more about exploring ideas and perspectives.
+            </p>
+            <a href="/blog" class="feature-link">Read My Stories →</a>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">🎓</div>
+            <h3 class="feature-title">If I Were Starting Over</h3>
+            <p class="feature-description">
+                My take on the best way to learn from scratch — guiding you from the basics to more advanced topics in 
+                C, C++, Rust, Linux systems, and beyond.
+            </p>
+            <a href="/courses" class="feature-link">Browse Courses →</a>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">💻</div>
+            <h3 class="feature-title">Projects & Fun Builds</h3>
+            <p class="feature-description">
+                A collection of my hands-on projects from useful tools to fun experiments where I practice simple concepts by building, 
+                creating, and sometimes breaking things just to see how they work.
+            </p>
+            <a href="/projects" class="feature-link">Check Them Out →</a>
+        </div>
+    </div>
+</section>
+<!-- Recent Posts Section -->
+{% if section.subsections %}
+{% for subsection_path in section.subsections %}
+{% if subsection_path is ending_with("blog") %}
+{% set blog_section = get_section(path=subsection_path) %}
+{% if blog_section.pages %}
+<section class="recent-posts">
+    <div class="section-header">
+        <h2 class="section-title">Latest Articles</h2>
+        <a href="/blog" class="section-link">View All →</a>
+    </div>
+
+    <div class="posts-grid">
+        {% for page in blog_section.pages | slice(end=3) %}
+        <article class="post-card">
+            <div class="post-meta">
+                <time class="post-date">{{ page.date | date(format="%B %d, %Y") }}</time>
+                {% if page.taxonomies.tags %}
+                <div class="post-tags">
+                    {% for tag in page.taxonomies.tags %}
+                    <span class="tag">#{{ tag }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            <h3 class="post-title">
+                <a href="{{ page.permalink }}">{{ page.title }}</a>
+            </h3>
+            {% if page.description %}
+            <p class="post-excerpt">{{ page.description }}</p>
+            {% elif page.summary %}
+            <p class="post-excerpt">{{ page.summary | safe }}</p>
+            {% endif %}
+            <a href="{{ page.permalink }}" class="post-link">Read More →</a>
+        </article>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+{% endif %}
+{% endfor %}
+{% endif %}
+
+<!-- Newsletter/Contact CTA -->
+<section class="cta-section">
+    <div class="cta-content">
+        <h2 class="cta-title">Come Along on the Journey</h2>
+        <p class="cta-description">
+            I’m just sharing what I learn along the way — the wins, the mistakes, and the little discoveries 
+            that make tech so fascinating. If any of it resonates, I’d love to hear your thoughts too.
+        </p>
+        <div class="cta-actions">
+            <a href="/contact" class="btn btn-primary">Say Hello</a>
+            <a href="/about" class="btn btn-outline">About Me</a>
+        </div>
+    </div>
+</section>
+{% endblock content %}

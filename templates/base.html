@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="index, follow">
+
+    {% if page -%}
+    <title>{{ page.title }} | {{ config.title }}</title>
+    {% if page.description -%}
+    <meta name="description" content="{{ page.description }}">
+    {%- endif %}
+    {%- elif section -%}
+    <title>{{ section.title }} | {{ config.title }}</title>
+    {% if section.description -%}
+    <meta name="description" content="{{ section.description }}">
+    {%- endif %}
+    {%- else -%}
+    <title>{{ config.title }}</title>
+    {% if config.description -%}
+    <meta name="description" content="{{ config.description }}">
+    {%- endif %}
+    {%- endif %}
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ current_url | safe }}">
+    <meta property="og:title"
+        content="{% if page %}{{ page.title }} | {% elif section %}{{ section.title }} | {% endif %}{{ config.title }}">
+    {% if page and page.description -%}
+    <meta property="og:description" content="{{ page.description }}">
+    {%- elif section and section.description -%}
+    <meta property="og:description" content="{{ section.description }}">
+    {%- elif config.description -%}
+    <meta property="og:description" content="{{ config.description }}">
+    {%- endif %}
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="{{ current_url | safe }}">
+    <meta name="twitter:title"
+        content="{% if page %}{{ page.title }} | {% elif section %}{{ section.title }} | {% endif %}{{ config.title }}">
+    {% if page and page.description -%}
+    <meta name="twitter:description" content="{{ page.description }}">
+    {%- elif section and section.description -%}
+    <meta name="twitter:description" content="{{ section.description }}">
+    {%- elif config.description -%}
+    <meta name="twitter:description" content="{{ config.description }}">
+    {%- endif %}
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="{{ get_url(path="main.css") }}">
+
+    <!-- Feeds -->
+    {% if config.generate_feeds -%}
+    <link rel="alternate" type="application/rss+xml" title="{{ config.title }} RSS Feed" href="{{ get_url(path="rss.xml") }}">
+    <link rel="alternate" type="application/atom+xml" title="{{ config.title }} Atom Feed" href="{{ get_url(path="atom.xml") }}">
+    {%- endif %}
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ get_url(path="favicon.ico") }}">
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <div class="nav-brand">
+                    <a href="{{ config.base_url }}" class="brand-link">
+                        <span class="brand-icon">$</span>
+                        <span class="brand-text">{{ config.extra.logo_text | default(value="System Programming")
+                            }}</span>
+                    </a>
+                </div>
+
+                <div class="nav-menu" id="nav-menu">
+                    {% if config.extra.menu_items -%}
+                    {%- for item in config.extra.menu_items -%}
+                    <a href="{{ item.url | replace(from="$BASE_URL", to=config.base_url) }}" class="nav-link" {% if item.newtab
+                        %}target="_blank" rel="noopener" {% endif %}>
+                        {{ item.name }}
+                    </a>
+                    {%- endfor -%}
+                    {%- endif %}
+                </div>
+
+                <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
+                    <span class="nav-toggle-line"></span>
+                    <span class="nav-toggle-line"></span>
+                    <span class="nav-toggle-line"></span>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container">
+            {% block content %}{% endblock content %}
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <p class="footer-copyright">
+                        © {{ now() | date(format="%Y") }} {{ config.extra.author | default(value="System Programming
+                        Hub") }}
+                    </p>
+                </div>
+                <div class="footer-section">
+                    <p class="footer-tech">
+                        Built with <a href="https://www.getzola.org/" target="_blank" rel="noopener">Zola</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Mobile menu toggle
+        document.getElementById('nav-toggle').addEventListener('click', function () {
+            document.getElementById('nav-menu').classList.toggle('active');
+            this.classList.toggle('active');
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

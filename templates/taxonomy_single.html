@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="page-header">
+    <div class="page-header-content">
+        <h1 class="page-title">Posts tagged "{{ term.name }}"</h1>
+        <p class="page-description">{{ term.pages | length }} posts found</p>
+    </div>
+</section>
+
+<section class="page-content">
+    <div class="posts-grid">
+        {% for page in term.pages %}
+        <article class="post-card">
+            <div class="post-meta">
+                <time class="post-date">{{ page.date | date(format="%B %d, %Y") }}</time>
+                {% if page.taxonomies.tags %}
+                <div class="post-tags">
+                    {% for tag in page.taxonomies.tags %}
+                    <span class="tag">#{{ tag }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            <h3 class="post-title">
+                <a href="{{ page.permalink }}">{{ page.title }}</a>
+            </h3>
+            {% if page.description %}
+            <p class="post-excerpt">{{ page.description }}</p>
+            {% elif page.summary %}
+            <p class="post-excerpt">{{ page.summary | safe }}</p>
+            {% endif %}
+            <a href="{{ page.permalink }}" class="post-link">Read More →</a>
+        </article>
+        {% endfor %}
+    </div>
+</section>
+{% endblock content %}
